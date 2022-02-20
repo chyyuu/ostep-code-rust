@@ -1,19 +1,19 @@
 extern crate nix;
-use intro::common::Spin;
-use nix::unistd::{getppid, Pid};
-use std::alloc::{alloc, Layout, System};
+use intro::common::spin;
+use nix::unistd::{getppid};
+use std::alloc::{alloc, Layout};
 use std::env::args;
 use std::io::{self, Write};
-fn main() {
-    let mut argv = args();
+fn main() -> std::io::Result<()> {
+    let argv = args();
     let argc = argv.len();
     if argc != 2 {
         let mut stderr = io::stderr();
-        stderr.write(b"usage: cpu <string>\n");
+        stderr.write(b"usage: cpu <string>\n")?;
         std::process::exit(1);
     } else {
         let layout = Layout::new::<i32>();
-        let mut p = unsafe { alloc(layout) };
+        let p = unsafe { alloc(layout) };
         //assert_ne!(p,std::ptr::null());
         println!(
             "({}) addr pointed to by p: {}\n",
@@ -24,7 +24,7 @@ fn main() {
             *(p as *mut i32) = args().nth(1).unwrap().parse::<i32>().unwrap();
         }
         loop {
-            Spin(1);
+            spin(1);
             unsafe {
                 *(p as *mut i32) = *(p as *mut i32) + 1;
             }

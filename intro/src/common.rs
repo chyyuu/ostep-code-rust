@@ -1,5 +1,5 @@
-use std::time::{Duration, SystemTime};
-pub fn Spin(howlong: usize) {
+use std::time::{SystemTime};
+pub fn spin(howlong: usize) {
     let earlier = SystemTime::now();
     while SystemTime::now().duration_since(earlier).unwrap().as_secs() < howlong as u64 {
         continue;

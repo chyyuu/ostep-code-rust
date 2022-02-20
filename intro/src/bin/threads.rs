@@ -3,25 +3,25 @@ use libc::c_void;
 use libc::{pthread_create, pthread_join, pthread_t};
 use std::env::args;
 use std::io::{self, Write};
-static mut counter: i32 = 0;
-static mut loops: i32 = 0;
-pub extern "C" fn worker(args: *mut c_void) -> *mut c_void {
+static mut COUNTER: i32 = 0;
+static mut LOOPS: i32 = 0;
+pub extern "C" fn worker(_args: *mut c_void) -> *mut c_void {
     unsafe {
-        for i in 0..loops {
-            counter = counter + 1;
+        for _i in 0..LOOPS {
+            COUNTER = COUNTER + 1;
         }
     }
     0 as *mut c_void
 }
-fn main() {
+fn main() -> std::io::Result<()> {
     let mut argv = args();
     let argc = argv.len();
     if argc != 2 {
         let mut stderr = io::stderr();
-        stderr.write(b"usage: cpu <string>\n");
+        stderr.write(b"usage: cpu <string>\n")?;
     } else {
         unsafe {
-            loops = argv.nth(1).unwrap().parse::<i32>().unwrap();
+            LOOPS = argv.nth(1).unwrap().parse::<i32>().unwrap();
         }
         let mut p1: pthread_t = 0;
         let mut p2: pthread_t = 0;
@@ -32,9 +32,10 @@ fn main() {
             pthread_join(p2, 0 as *mut *mut c_void);
         }
         unsafe {
-            println!("Final value   : {}\n", counter);
+            println!("Final value   : {}\n", COUNTER);
         }
     }
+    Ok(())
 }
 
 /*
