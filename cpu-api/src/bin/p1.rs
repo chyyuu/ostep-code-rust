@@ -1,0 +1,38 @@
+extern crate  nix;
+use nix::unistd::*;
+//mod cpu_api;
+/*int
+main(int argc, char *argv[])
+{
+    printf("hello world (pid:%d)\n", (int) getpid());
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child (new process)
+        printf("hello, I am child (pid:%d)\n", (int) getpid());
+    } else {
+        // parent goes down this path (original process)
+        printf("hello, I am parent of %d (pid:%d)\n",
+	       rc, (int) getpid());
+    }
+    return 0;
+}*/
+fn main(){
+    println!("hello world (pid:{})",getpid());
+    match unsafe{fork()} {
+        Ok(ForkResult::Parent { child, .. }) => {
+            println!("hello, I am parent of {} (pid:{})", child, getpid());
+        }
+        Ok(ForkResult::Child) => println!("hello, I am child (pid:{})",getpid()),
+        Err(_) => {
+            println!("Fork failed");
+            std::process::exit(1);
+        }
+     }
+
+    
+    
+}
