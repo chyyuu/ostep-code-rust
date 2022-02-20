@@ -1,9 +1,9 @@
-use std::time::{Duration,SystemTime};
-pub fn Spin(howlong:usize){
-   let earlier = SystemTime::now();
-   while SystemTime::now().duration_since(earlier).unwrap().as_secs()< howlong as u64{
-   continue;  
-   }
+use std::time::{Duration, SystemTime};
+pub fn Spin(howlong: usize) {
+    let earlier = SystemTime::now();
+    while SystemTime::now().duration_since(earlier).unwrap().as_secs() < howlong as u64 {
+        continue;
+    }
 }
 
 /*#ifndef __common_h__
@@ -23,7 +23,7 @@ double GetTime() {
 void Spin(int howlong) {
     double t = GetTime();
     while ((GetTime() - t) < (double) howlong)
-	; // do nothing in loop
+    ; // do nothing in loop
 }
 
 #endif // __common_h__*/
