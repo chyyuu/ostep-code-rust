@@ -9,18 +9,19 @@ fn main() -> std::io::Result<()> {
     let argc = argv.len();
     if argc != 2 {
         let mut stderr = io::stderr();
-        stderr.write(b"usage: cpu <string>\n")?;
+        stderr.write(b"usage: mem <value>\n")?;
         std::process::exit(1);
     } else {
         let layout = Layout::new::<i32>();
         let p = unsafe { alloc(layout) };
         //assert_ne!(p,std::ptr::null());
         println!(
-            "({}) addr pointed to by p: {}\n",
+            "({}) addr pointed to by p: 0x{:x}\n",
             getppid().as_raw(),
             p as usize
         );
         unsafe {
+            // assign value to addr stored in p
             *(p as *mut i32) = args().nth(1).unwrap().parse::<i32>().unwrap();
         }
         loop {
@@ -28,7 +29,7 @@ fn main() -> std::io::Result<()> {
             unsafe {
                 *(p as *mut i32) = *(p as *mut i32) + 1;
             }
-            println!("({}) value of p: {}\n", getppid().as_raw(), unsafe {
+            println!("({}) value of p: 0x{:x}\n", getppid().as_raw(), unsafe {
                 *(p as *mut i32)
             });
         }

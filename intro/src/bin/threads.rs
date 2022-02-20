@@ -18,13 +18,16 @@ fn main() -> std::io::Result<()> {
     let argc = argv.len();
     if argc != 2 {
         let mut stderr = io::stderr();
-        stderr.write(b"usage: cpu <string>\n")?;
+        stderr.write(b"usage: threads <loops>\n")?;
     } else {
         unsafe {
             LOOPS = argv.nth(1).unwrap().parse::<i32>().unwrap();
         }
         let mut p1: pthread_t = 0;
         let mut p2: pthread_t = 0;
+        unsafe {
+            println!("Initial value   : {}\n", COUNTER);
+        }
         unsafe {
             pthread_create(&mut p1, std::ptr::null(), worker, 0 as *mut c_void);
             pthread_create(&mut p2, std::ptr::null(), worker, 0 as *mut c_void);
